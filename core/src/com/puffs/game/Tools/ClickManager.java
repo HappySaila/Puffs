@@ -34,7 +34,6 @@ public class ClickManager {
         int y = 0;
         clickPosition.x = Gdx.input.getX();
         clickPosition.y = PuffsDriver.SCR_H - Gdx.input.getY();
-        System.out.println(clickPosition.x +" , "+clickPosition.y);
 
         if (clickPosition.x > gridStart.x && clickPosition.x < gridEnd.x &&
                 clickPosition.y > gridStart.y && clickPosition.y < gridEnd.y){
@@ -46,6 +45,11 @@ public class ClickManager {
             if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
                 timer = 0;
                 board.build(x,y);
+                //handle click output
+            }
+            if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){
+                timer = 0;
+                board.createOrb(x,y);
                 //handle click output
             }
         }

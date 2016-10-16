@@ -1,11 +1,16 @@
 package com.puffs.game.GameObjects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.puffs.game.GameObjects.Blocks.Block;
 import com.puffs.game.GameObjects.Blocks.Grass;
+import com.puffs.game.GameObjects.Blocks.GrassOrb;
+import com.puffs.game.GameObjects.Blocks.Orb;
 import com.puffs.game.PuffsDriver;
 import com.puffs.game.Tools.Position;
+
+import java.util.ArrayList;
 
 /**
  * Created by happysaila on 2016/10/16.
@@ -20,6 +25,9 @@ public class Board {
     private int blockSize;
     private Position boardStartPosition;
     PuffsDriver game;
+
+    float delta;
+    ArrayList<Orb> orbs;
 
 //    highLight textures
     Texture green;
@@ -46,17 +54,52 @@ public class Board {
 
 //        textures
         green = new Texture("Blocks/green.png");
+
+        orbs = new ArrayList<Orb>();
     }
     //endregion
 
-    //regoin methods
-    public boolean checkBlock(Position position){
+    //region methods
+    public void addOrb(Orb orb){
+        orbs.add(orb);
+    }
+
+    public boolean checkBlockEmpty(int x, int y){
 //        will return true if the current block is taken
-        if (getPosition(position)!=null){
+        Position position = new Position(x,y);
+        if (getPosition(position).getBlockType().getClass() == Grass.class){
 //            the current position has a block
             return true;
         }else {
             return false;
+        }
+    }
+
+    public void createOrb(int x, int y){
+        boolean canCreate = true;
+        try {
+            for (int i = x-1; i < x+2; i++) {
+                for (int j = y-1; j < y+2; j++) {
+                    if (!checkBlockEmpty(i, j)){
+                        canCreate = false;
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Board cannot fit the orb exception");
+        }
+        if (canCreate){
+//            create orb
+            orbs.add(new Orb(new Position(x,y), this));
+            for (int i = x-1; i < x+2; i++) {
+                for (int j = y-1; j < y+2; j++) {
+                    grid[j][i].setBlockType(new GrassOrb());
+                }
+            }
+            System.out.println("orb added");
+        }else{
+            System.out.println("Orb can only be placed on grass exception");
         }
     }
 
@@ -74,7 +117,7 @@ public class Board {
     }
 
     public void build(int x, int y){
-        grid[x][y].upgrade();
+        grid[y][x].upgrade();
     }
 
     public void render(SpriteBatch sb){
@@ -87,8 +130,15 @@ public class Board {
                         blockSize, blockSize,
                         1, 1,
                         90 * (j - i),//rotation
-                        0, 0, 30, 30, false, false);
+                        0, 0, temp.getWidth(), temp.getHeight(), false, false);
             }
+        }
+        renderOrbs(sb);
+    }
+
+    private void renderOrbs(SpriteBatch sb){
+        for (Orb o:orbs) {
+            o.render(sb);
         }
     }
 

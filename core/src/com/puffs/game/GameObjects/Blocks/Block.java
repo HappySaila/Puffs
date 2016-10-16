@@ -22,6 +22,24 @@ public class Block {
     }
 
     public void upgrade(){
-
+        if (blockType.getClass() == Grass.class){
+            blockType = new Wood();
+        }else if(blockType.getClass() == Wood.class){
+            blockType = new Brick();
+        }else if(blockType.getClass() == Brick.class){
+            blockType = new Concrete();
+        }else if(blockType.getClass() == Concrete.class){
+            blockType = new Metal();
+        }
     }
+
+//    region getters
+    public BlockType getBlockType(){
+        return blockType;
+    }
+
+    public void setBlockType(BlockType blockType){
+        this.blockType = blockType;
+    }
+//    endregion
 }
