@@ -11,6 +11,7 @@ import com.puffs.game.PuffsDriver;
 import com.puffs.game.Tools.Position;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 /**
  * Created by happysaila on 2016/10/16.
@@ -31,6 +32,7 @@ public class Board {
 
 //    highLight textures
     Texture green;
+    Texture red;
 
 
 
@@ -54,6 +56,7 @@ public class Board {
 
 //        textures
         green = new Texture("Blocks/green.png");
+        red = new Texture("Blocks/red.png");
 
         orbs = new ArrayList<Orb>();
     }
@@ -107,12 +110,13 @@ public class Board {
         return boardStartPosition;
     }
 
-    public Block getPosition(Position position){
-        return grid[position.y][position.x];
-    }
-
     public void highLightGreen(int x, int y){
         game.sb.draw(green, boardStartPosition.x + x*blockSize, boardStartPosition.y + y*blockSize,
+                blockSize, blockSize);
+    }
+
+    public void highLightRed(int x, int y){
+        game.sb.draw(red, boardStartPosition.x + x*blockSize, boardStartPosition.y + y*blockSize,
                 blockSize, blockSize);
     }
 
@@ -142,10 +146,20 @@ public class Board {
         }
     }
 
+    public void renderPath(Stack<Block> path){
+        for (Block block:path) {
+            block.upgrade();
+        }
+    }
+
+    public boolean isWalkable(Block block){
+//        will return true if bullets can be fired on a square at the position parameter
+        return (block.getBlockType().getClass() == Grass.class);
+    }
+
     //endregion
 
 //    region getters and setters
-
     public int getLength() {
         return length;
     }
@@ -156,6 +170,54 @@ public class Board {
 
     public int getBlockSize() {
         return blockSize;
+    }
+
+    public Block getAbove(Block block){
+//        will return the block above block, will return null if reached the end of the board
+        Block above = null;
+        try {
+            above = getPosition(new Position(block.getPosition().x, block.getPosition().y+1));
+        } catch (Exception e) {
+            above = null;
+        }
+        return above;
+    }
+
+    public Block getBelow(Block block) {
+//        will return the block below block parameter
+        Block below = null;
+        try {
+            below = getPosition(new Position(block.getPosition().x, block.getPosition().y-1));
+        } catch (Exception e) {
+            below = null;
+        }
+        return below;
+    }
+
+    public Block getLeft(Block block){
+//        will return the block left block parameter
+        Block left = null;
+        try {
+            left = getPosition(new Position(block.getPosition().x-1, block.getPosition().y));
+        } catch (Exception e) {
+            left = null;
+        }
+        return left;
+    }
+
+    public Block getRight(Block block){
+//        will return the block left block parameter
+        Block right = null;
+        try {
+            right = getPosition(new Position(block.getPosition().x+1, block.getPosition().y));
+        } catch (Exception e) {
+            right = null;
+        }
+        return right;
+    }
+
+    public Block getPosition(Position position){
+        return grid[position.y][position.x];
     }
 
 //    endregion
