@@ -36,7 +36,10 @@ public class Finder {
             adjacentBlocks.add(right);
 
             for (Block block: adjacentBlocks) {
-                if (board.isWalkable(block) && block.isOpen()){
+                if (block == null){
+                    continue;
+                }
+                if ((board.isWalkable(block) || block==endBlock) && !closed.contains(block)){
 //                block can be added to open list. f,g + h values can be calculated
                     int g = getG(block);//will calculate g of blocks current position
                     if (g < block.getG() || block.getG()==0){
@@ -55,6 +58,11 @@ public class Finder {
             open.remove(currentBlock);
 //          choose lowest f value, check if this block is the destionation block
             currentBlock = getLowestF(open);
+            if (currentBlock == null){
+                //no path possible
+                System.out.println("no path possible");
+                return null;
+            }
         }
         //formulate stack
         return formulateStack(endBlock);
@@ -90,7 +98,13 @@ public class Finder {
     }
 
     private static Block getLowestF(ArrayList<Block> open){
-        Block lowest = open.get(0);
+        Block lowest;
+        if (open.size()>0){
+            lowest = open.get(0);
+        }else{
+            return null;
+
+        }
         for (Block block:open) {
             if (block.getF() < lowest.getF()){
                 lowest = block;

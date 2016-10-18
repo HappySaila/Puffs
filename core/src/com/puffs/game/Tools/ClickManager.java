@@ -80,9 +80,6 @@ public class ClickManager {
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)){
             path = Finder.calculatePath(start, end, board);
-        }
-
-        if (path!=null){
             board.renderPath(path);
         }
     }
