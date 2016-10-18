@@ -8,6 +8,7 @@ import com.puffs.game.GameObjects.Blocks.Grass;
 import com.puffs.game.GameObjects.Blocks.GrassOrb;
 import com.puffs.game.GameObjects.Blocks.Orb;
 import com.puffs.game.PuffsDriver;
+import com.puffs.game.Tools.FinderData;
 import com.puffs.game.Tools.Position;
 
 import java.util.ArrayList;
@@ -29,6 +30,8 @@ public class Board {
 
     float delta;
     ArrayList<Orb> orbs;
+    public ArrayList<Block> openList;
+    public ArrayList<Block> closedList;
 
 //    highLight textures
     Texture green;
@@ -138,6 +141,16 @@ public class Board {
             }
         }
         renderOrbs(sb);
+        if (openList!=null){
+            for (Block b:openList) {
+                highLightGreen(b.getPosition().x, b.getPosition().y);
+            }
+        }
+        if (closedList!=null){
+            for (Block b:closedList) {
+                highLightRed(b.getPosition().x, b.getPosition().y);
+            }
+        }
     }
 
     private void renderOrbs(SpriteBatch sb){
@@ -146,9 +159,16 @@ public class Board {
         }
     }
 
-    public void renderPath(Stack<Block> path){
-        for (Block block:path) {
+    public void renderPath(FinderData path){
+        for (Block block:path.getPath()) {
             block.upgrade();
+            block.resetNode();
+        }
+        for (Block block:path.getOpenList()) {
+            block.resetNode();
+        }
+        for (Block block:path.getClosedList()) {
+            block.resetNode();
         }
     }
 

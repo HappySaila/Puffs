@@ -63,6 +63,10 @@ public class Block {
         return !node.closed;
     }
 
+    public void printNode(){
+        System.out.println("f: "+node.f+"\ng: "+node.g+"\nh: "+node.h+"\nparent: "+node.parent);
+    }
+
     public void setBlockType(BlockType blockType){
         this.blockType = blockType;
     }
@@ -72,6 +76,13 @@ public class Block {
         node.g = g;
         node.h = h;
         node.parent = parent;
+    }
+
+    public void resetNode(){
+        node.f = 0;
+        node.g = 0;
+        node.h = 0;
+        node.parent = null;
     }
 
 //    endregion

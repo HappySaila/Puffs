@@ -25,7 +25,7 @@ public class ClickManager {
 //    testing path finding
     Block start;
     Block end;
-    Stack<Block> path;
+    FinderData path;
     public ClickManager(Board board, PuffsDriver game) {
         this.game = game;
         this.board = board;
@@ -80,7 +80,12 @@ public class ClickManager {
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)){
             path = Finder.calculatePath(start, end, board);
-            board.renderPath(path);
+            if (path!=null){
+                board.renderPath(path);
+            }
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.D)){
+            board.getPosition(new Position(x,y)).printNode();
         }
     }
 
